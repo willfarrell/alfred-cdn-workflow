@@ -1,0 +1,11 @@
+{
+	"packages": [
+		{
+			"name":"jquery",
+			"description":"",
+			"version":"1.10.2",
+			"filename":"jquery.min.js",
+			"keywords":["jquery"]
+		}
+	]
+}

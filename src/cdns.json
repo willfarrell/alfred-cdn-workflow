@@ -1,0 +1,19 @@
+{
+	
+	"google": {
+		"id":"google",
+		"name":"Google - in dev",
+		"url":"//ajax.googleapis.com/ajax/libs"
+	},
+	"msn": {
+		"id":"msn",
+		"name":"Microsoft - in dev",
+		"url":"//ajax.aspnetcdn.com/ajax"
+	},
+	"cf": {
+		"id":"cf",
+		"name":"CloudFlare - cdnjs.com",
+		"url":"//cdnjs.com/ajax/libs",
+		"db_url":"http://cdnjs.com/packages.json"
+	}
+}
