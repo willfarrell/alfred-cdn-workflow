@@ -1,6 +1,6 @@
 <?php
 //$query = "jq";
-$query = "cf jquery";
+//$query = "cloudflare jquery";
 //$query = "msn jq";
 // ****************
 //error_reporting(0);
@@ -94,14 +94,17 @@ function run($params, $query) {
 		if ($priority) {
 			$title = $pkg->name." (".$pkg->version.")"; // remove grunt- from title
 		
-			$url = "{$params->url}/{$pkg->name}/{$pkg->filename}";
+			$url = $params->url;
+			$url = str_replace("{name}", $pkg->name, $url);
+			$url = str_replace("{filename}", $pkg->filename, $url);
+			$url = str_replace("{version}", $pkg->version, $url);
 			
 			//$w->result( "cdn-{$params->id}-{$pkg->name}", $url, $title, $pkg->description, "icon-cache/{$params->id}.png", "yes" );
 			$output[$priority][] = array(
 				"id" => "cdn-{$params->id}-{$pkg->name}",
 				"value" => $url,
 				"title" => $title,
-				"details" => $pkg->description,
+				"details" => $pkg->description.$url,
 				"icon" => "icon-cache/{$params->id}.png"
 			);
 			

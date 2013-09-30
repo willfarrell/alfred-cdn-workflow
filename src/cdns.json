@@ -1,19 +1,21 @@
 {
-	
 	"google": {
 		"id":"google",
 		"name":"Google - in dev",
-		"url":"//ajax.googleapis.com/ajax/libs"
+		"site":"https://developers.google.com/speed/libraries/devguide#Libraries",
+		"url":"//ajax.googleapis.com/ajax/libs/{name}/{version}/{filename}"
 	},
 	"msn": {
 		"id":"msn",
 		"name":"Microsoft - in dev",
-		"url":"//ajax.aspnetcdn.com/ajax"
+		"site":"http://www.asp.net/ajaxlibrary/cdn.ashx",
+		"url":"//ajax.aspnetcdn.com/ajax/{name}/{filename}"
 	},
-	"cf": {
-		"id":"cf",
+	"cloudflare": {
+		"id":"cloudflare",
 		"name":"CloudFlare - cdnjs.com",
-		"url":"//cdnjs.com/ajax/libs",
+		"site":"http://cdnjs.com",
+		"url":"//cdnjs.com/ajax/libs/{name}/{version}/{filename}",
 		"db_url":"http://cdnjs.com/packages.json"
 	}
 }
