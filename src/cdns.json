@@ -1,15 +1,17 @@
 {
 	"google": {
 		"id":"google",
-		"name":"Google - in dev",
+		"name":"Google - googleapis.com",
 		"site":"https://developers.google.com/speed/libraries/devguide#Libraries",
-		"url":"//ajax.googleapis.com/ajax/libs/{name}/{version}/{filename}"
+		"url":"//ajax.googleapis.com/ajax/libs/{name}/{version}/{filename}",
+		"db_url":false
 	},
 	"msn": {
 		"id":"msn",
-		"name":"Microsoft - in dev",
+		"name":"Microsoft - aspnetcdn.com",
 		"site":"http://www.asp.net/ajaxlibrary/cdn.ashx",
-		"url":"//ajax.aspnetcdn.com/ajax/{name}/{filename}"
+		"url":"//ajax.aspnetcdn.com/ajax/{name}/{filename}",
+		"db_url":false
 	},
 	"cloudflare": {
 		"id":"cloudflare",

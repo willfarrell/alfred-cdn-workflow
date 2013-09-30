@@ -1,6 +1,7 @@
 <?php
 //$query = "jq";
 //$query = "cloudflare jquery";
+$query = "google jq";
 //$query = "msn jq";
 // ****************
 //error_reporting(0);
@@ -47,14 +48,20 @@ function load($params) {
 	// get db
 	$pkgs = $w->read("{$params->id}CDN.json");
 	$timestamp = $w->filetime("{$params->id}CDN.json");
-	if ((!$pkgs || $timestamp < (time() - 7 * 86400)) && $params->db_url) {
-		$data = $w->request($params->db_url);
+	if ((!$pkgs || $timestamp < (time() - 7 * 86400))) {
+		$id = $params->id;
+		$data = $id( ($params->db_url) ? $params->db_url : $params->site);
 		$w->write($data, "{$params->id}CDN.json");
 		$pkgs = json_decode( $data );
-	} else if (!$pkgs) {
+	}/* else if (!$pkgs) {
+		// add in db gen scripts
+		
+		$data = $id($params->site);
+		
+		
 		$data = '{"packages":[]}';
 		$pkgs = json_decode( $data );
-	}
+	}*/
 	
 	$pkgs = $pkgs->packages;
 	return $pkgs;
@@ -104,7 +111,7 @@ function run($params, $query) {
 				"id" => "cdn-{$params->id}-{$pkg->name}",
 				"value" => $url,
 				"title" => $title,
-				"details" => $pkg->description.$url,
+				"details" => $pkg->description,
 				"icon" => "icon-cache/{$params->id}.png"
 			);
 			
@@ -124,6 +131,62 @@ function run($params, $query) {
 /*if ( count( $w->results() ) == 0 ) {
 	$w->result( 'cdn', $query, 'No libraries found.', $query, 'icon.png', 'no' );
 }*/
+
+// build cloudflare DB
+function cloudflare($url) {
+	global $w;
+	return $w->request($url);
+}
+
+// build google DB
+function google($url) {
+	global $w;
+	$data = $w->request($url);
+	
+	preg_match_all('/<div id="(.*?)">\s*<dl>[\s\S]*?<dt>(.*?)<\/dt>([\s\S]*?)<\/div>/i', $data, $matches);
+	
+	$json = array(
+		"packages" => array()
+	);
+	
+	for($i = 0, $l = sizeof($matches[0]); $i < $l; $i++) {
+		preg_match('/ajax\.googleapis\.com\/ajax\/libs\/([\w]*)\/([\d\.]*)\/([\s\S]*?)"/i', $matches[3][$i], $url_matches);
+		
+		preg_match_all('/([\d\.]{3,9})/i', $matches[3][$i], $versions);
+		for($j = 0, $k = sizeof($versions[0]); $j < $k; $j++) {
+			$json["packages"][] = array(
+				"name" => $url_matches[1],
+				"description" => $matches[2][$i],
+				"version" => $versions[1][$j],
+				"filename" => $url_matches[3],
+				"keywords" => array()
+			);
+		}
+	}
+	return json_encode($json);
+}
+
+// build msn DB
+function msn($url) {
+	global $w;
+	$data = $w->request($url);
+	
+	$json = array(
+		"packages" => array()
+	);
+	
+	preg_match_all('/<br \/>([\w\s]*?) version ([\d\.]*)[\s\S]*?<li>[\s\S]*?<\/li><li>http:\/\/ajax.aspnetcdn.com\/ajax\/([\w]*)\/([\s\S]*?)<\/li>/i', $data, $matches);
+	for($i = 0, $l = sizeof($matches[0]); $i < $l; $i++) {
+		$json["packages"][] = array(
+			"name" => trim($matches[1][$i]),
+			"description" => "",
+			"version" => $matches[2][$i],
+			"filename" => $matches[4][$i],
+			"keywords" => array()
+		);
+	}
+	return json_encode($json);
+}
 
 echo $w->toxml();
 // ****************
