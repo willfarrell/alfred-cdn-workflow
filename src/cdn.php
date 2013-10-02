@@ -1,7 +1,7 @@
 <?php
 //$query = "jq";
 //$query = "cloudflare jquery";
-$query = "google jq";
+//$query = "google jq";
 //$query = "msn jq";
 // ****************
 //error_reporting(0);
@@ -152,16 +152,17 @@ function google($url) {
 	for($i = 0, $l = sizeof($matches[0]); $i < $l; $i++) {
 		preg_match('/ajax\.googleapis\.com\/ajax\/libs\/([\w]*)\/([\d\.]*)\/([\s\S]*?)"/i', $matches[3][$i], $url_matches);
 		
-		preg_match_all('/([\d\.]{3,9})/i', $matches[3][$i], $versions);
-		for($j = 0, $k = sizeof($versions[0]); $j < $k; $j++) {
+		//preg_match_all('/([\d\.]{3,9})/i', $matches[3][$i], $versions);
+		//for($j = 0, $k = sizeof($versions[0]); $j < $k; $j++) {
 			$json["packages"][] = array(
 				"name" => $url_matches[1],
 				"description" => $matches[2][$i],
-				"version" => $versions[1][$j],
+				//"version" => $versions[1][$j],
+				"version" => $url_matches[2],
 				"filename" => $url_matches[3],
 				"keywords" => array()
 			);
-		}
+		//}
 	}
 	return json_encode($json);
 }

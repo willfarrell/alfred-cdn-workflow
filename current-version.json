@@ -1,5 +1,5 @@
 {
-	"version": 1.0,
+	"version": 1.1,
 	"download_url": "https://raw.github.com/willfarrell/alfred-cdn-workflow/master/CDN.alfredworkflow",
 	"description": "Check which CDNs a package is hosted on."
 }
