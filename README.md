@@ -1,4 +1,4 @@
-CDN ([Download v1.0](https://raw.github.com/willfarrell/alfred-cdn-workflow/master/CDN.alfredworkflow))
+CDN ([Download v1.1](https://raw.github.com/willfarrell/alfred-cdn-workflow/master/CDN.alfredworkflow))
 =====================
 
 Check which CDNs a package is hosted on.
