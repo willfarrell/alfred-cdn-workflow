@@ -17,7 +17,8 @@ Run the [Alleyoop Workflow](http://www.alfredforum.com/topic/1582-alleyoop-updat
 
 ## About
 
-![alt text][sample]
+![alt text][all]
+![alt text][cloudflare]
 
 ## Commands
 - `cdn {query}`
@@ -25,4 +26,5 @@ Run the [Alleyoop Workflow](http://www.alfredforum.com/topic/1582-alleyoop-updat
 ## Contributors
 - [@willfarrell](https://github.com/willfarrell)
 
-[sample]: ./screenshots/sample.png "Sample"
+[all]: ./screenshots/all.png "Sample Options"
+[cloudflare]: ./screenshots/cloudflare.png "Sample CloudFlare Search"
