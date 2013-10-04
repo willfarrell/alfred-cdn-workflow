@@ -21,7 +21,10 @@ Run the [Alleyoop Workflow](http://www.alfredforum.com/topic/1582-alleyoop-updat
 ![alt text][cloudflare]
 
 ## Commands
-- `cdn {query}`
+- `cdn all {query}` - Search all CDNs
+- `cdn cf {query}` - Search Cloud Flare CDN ([cdnjs.com](http://cdnjs.com))
+- `cdn g {query}` - Search Google CDN
+- `cdn msn {query}` - Search MSN CDN
 
 ## Contributors
 - [@willfarrell](https://github.com/willfarrell)
