@@ -189,6 +189,18 @@ function msn($url) {
 	return json_encode($json);
 }
 
+// build jsdelivr DB
+function jsdelivr($url) {
+	global $w;
+	$data = $w->request($url);
+	
+	$json = array(
+		"packages" => array()
+	);
+	
+	return json_encode($json);
+}
+
 echo $w->toxml();
 // ****************
 ?>

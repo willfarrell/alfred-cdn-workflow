@@ -19,5 +19,12 @@
 		"site":"http://cdnjs.com",
 		"url":"//cdnjs.com/ajax/libs/{name}/{version}/{filename}",
 		"db_url":"http://cdnjs.com/packages.json"
+	},
+	"jsdelivr": {
+		"id":"jsdelivr",
+		"name":"JsDelivr - jsdelivr.com",
+		"site":"http://www.jsdelivr.com",
+		"url":"//cdn.jsdelivr.net/{name}/{version}/{filename}",
+		"db_url":false
 	}
 }
