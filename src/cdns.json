@@ -17,7 +17,7 @@
 		"id":"cloudflare",
 		"name":"CloudFlare - cdnjs.com",
 		"site":"http://cdnjs.com",
-		"url":"//cdnjs.com/ajax/libs/{name}/{version}/{filename}",
+		"url":"//cdnjs.cloudflare.com/ajax/libs/{name}/{version}/{filename}",
 		"db_url":"http://cdnjs.com/packages.json"
 	},
 	"jsdelivr": {
