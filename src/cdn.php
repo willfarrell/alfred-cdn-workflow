@@ -5,22 +5,34 @@
 //$query = "msn jq";
 // ****************
 //error_reporting(0);
+
+function console($str) {
+	if (true) {
+		var_dump($str);
+	}
+}
+console("DEBUG MODE");
+
+
 require_once('workflows.php');
 
 $w = new Workflows();
+
 if (!isset($query)) { $query = "{query}"; }
 $query = strtolower(trim($query));
 
 $cdns = json_decode(file_get_contents("cdns.json"));
 $output = array();
 
+// all
 if (strpos($query, " ") !== false) {
 	$parts = explode(" ", $query);
 	$cdn_q = array_shift($parts);
-	$string = implode($parts);
+		$string = implode($parts);
 	
 	foreach($cdns as $cdn => $params) {
 		$count = count( $w->results() );
+		
 		$pos = strpos($cdn, $cdn_q);
 		if ($pos !== false && $pos == 0) {
 			run($params, $string);
@@ -33,6 +45,7 @@ if (strpos($query, " ") !== false) {
 	
 }
 
+// 
 if ( count( $w->results() ) == 0 ) {
 	foreach($cdns as $cdn => $params) {
 		$count = count( $w->results() );
@@ -48,7 +61,7 @@ function load($params) {
 	// get db
 	$pkgs = $w->read("{$params->id}CDN.json");
 	$timestamp = $w->filetime("{$params->id}CDN.json");
-	if ((!$pkgs || $timestamp < (time() - 7 * 86400))) {
+	if ( (!$pkgs || $timestamp < (time() - 7 * 86400)) || 1 ) {
 		$id = $params->id;
 		$data = $id( ($params->db_url) ? $params->db_url : $params->site);
 		$w->write($data, "{$params->id}CDN.json");
@@ -68,7 +81,6 @@ function load($params) {
 }
 
 function search($plugin, $query) {
-	
 	if (isset($plugin->name)) {
 		$name = strtolower(trim($plugin->name));
 		if (strpos($name, $query) === 0) {
@@ -106,7 +118,6 @@ function run($params, $query) {
 			$url = str_replace("{filename}", $pkg->filename, $url);
 			$url = str_replace("{version}", $pkg->version, $url);
 			
-			//$w->result( "cdn-{$params->id}-{$pkg->name}", $url, $title, $pkg->description, "icon-cache/{$params->id}.png", "yes" );
 			$output[$priority][] = array(
 				"id" => "cdn-{$params->id}-{$pkg->name}",
 				"value" => $url,
@@ -193,11 +204,19 @@ function msn($url) {
 function jsdelivr($url) {
 	global $w;
 	$data = $w->request($url);
-	
+	$data = json_decode($data, true);
 	$json = array(
 		"packages" => array()
 	);
-	
+	for($i = 0, $l = sizeof($data); $i < $l; $i++) {
+		$json["packages"][] = array(
+			"name" => $data[$i]['name'],
+			"description" => $data[$i]['description'],
+			"version" => $data[$i]['lastversion'],
+			"filename" => $data[$i]['mainfile'],
+			"keywords" => array()
+		);
+	}
 	return json_encode($json);
 }
 

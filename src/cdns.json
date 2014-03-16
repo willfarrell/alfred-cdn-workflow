@@ -25,6 +25,6 @@
 		"name":"JsDelivr - jsdelivr.com",
 		"site":"http://www.jsdelivr.com",
 		"url":"//cdn.jsdelivr.net/{name}/{version}/{filename}",
-		"db_url":false
+		"db_url":"http://api.jsdelivr.com/v1/jsdelivr/libraries?fields=name,lastversion,versions,description,mainfile"
 	}
 }
