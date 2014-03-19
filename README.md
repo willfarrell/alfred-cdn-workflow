@@ -22,6 +22,7 @@ Run the [Alleyoop Workflow](http://www.alfredforum.com/topic/1582-alleyoop-updat
 
 ## Commands
 - `cdn all {query}` - Search all CDNs
+- `cdn js {query}` - Search JsDelivr CDN ([www.jsdelivr.com/](http://www.jsdelivr.com/))
 - `cdn cf {query}` - Search Cloud Flare CDN ([cdnjs.com](http://cdnjs.com))
 - `cdn g {query}` - Search Google CDN
 - `cdn msn {query}` - Search MSN CDN
