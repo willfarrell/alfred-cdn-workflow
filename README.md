@@ -1,5 +1,4 @@
 CDN ([Download v1.4](https://raw.github.com/willfarrell/alfred-cdn-workflow/master/CDN.alfredworkflow))
-=====================
 
 Check which CDNs a package is hosted on.
 

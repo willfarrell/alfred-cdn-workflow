@@ -31,10 +31,9 @@ if (strpos($query, " ") !== false) {
 	$parts = explode(" ", $query);
 	$cdn_q = array_shift($parts);
 	$string = implode($parts);
-	
 	foreach($cdns as $cdn => $params) {
 		$count = count( $w->results() );
-		
+
 		$pos = strpos($cdn, $cdn_q);
 		if ($pos !== false && $pos == 0) {
 			run($params, $string);
@@ -42,12 +41,12 @@ if (strpos($query, " ") !== false) {
 				$w->result( "cdn-$cdn", $query, 'No libraries found.', $query, "icon-cache/$cdn.png", 'no' );
 			}
 		}
-		
+
 	}
-	
+
 }
 
-// 
+//
 if ( count( $w->results() ) == 0 ) {
 	foreach($cdns as $cdn => $params) {
 		$count = count( $w->results() );
@@ -72,14 +71,14 @@ function load($params) {
 		//console("WRITE {$params->id}CDN.json");
 	}/* else if (!$pkgs) {
 		// add in db gen scripts
-		
+
 		$data = $id($params->site);
-		
-		
+
+
 		$data = '{"packages":[]}';
 		$pkgs = json_decode( $data );
 	}*/
-	
+
 	$pkgs = $pkgs->packages;
 	return $pkgs;
 }
@@ -110,7 +109,7 @@ function search($plugin, $query) {
 
 function run($params, $query) {
 	global $w;
-	
+
 	$pkgs = load($params);
 	$output = array();
 	for($i = 0, $l = sizeof($pkgs); $i < $l; $i++) {
@@ -119,12 +118,12 @@ function run($params, $query) {
 		if ($priority) {
 			//console("FOUND {$priority}");
 			$title = $pkg->name." (".$pkg->version.")"; // remove grunt- from title
-		
+
 			$url = $params->url;
 			$url = str_replace("{name}", $pkg->name, $url);
 			$url = str_replace("{filename}", $pkg->filename, $url);
 			$url = str_replace("{version}", $pkg->version, $url);
-			
+
 			$output[$priority][] = array(
 				"id" => "cdn-{$params->id}-{$pkg->name}",
 				"value" => $url,
@@ -132,10 +131,10 @@ function run($params, $query) {
 				"details" => $pkg->description,
 				"icon" => "icon-cache/{$params->id}.png"
 			);
-			
+
 		}
 	}
-	
+
 	// print out order
 	$count = 15; // 15
 	foreach($output as $list) {
@@ -160,16 +159,16 @@ function cloudflare($url) {
 function google($url) {
 	global $w;
 	$data = $w->request($url);
-	
+
 	preg_match_all('/<div id="(.*?)">\s*<dl>[\s\S]*?<dt>(.*?)<\/dt>([\s\S]*?)<\/div>/i', $data, $matches);
-	
+
 	$json = array(
 		"packages" => array()
 	);
-	
+
 	for($i = 0, $l = sizeof($matches[0]); $i < $l; $i++) {
 		preg_match('/ajax\.googleapis\.com\/ajax\/libs\/([\w]*)\/([\d\.]*)\/([\s\S]*?)"/i', $matches[3][$i], $url_matches);
-		
+
 		//preg_match_all('/([\d\.]{3,9})/i', $matches[3][$i], $versions);
 		//for($j = 0, $k = sizeof($versions[0]); $j < $k; $j++) {
 			$json["packages"][] = array(
@@ -189,11 +188,11 @@ function google($url) {
 function msn($url) {
 	global $w;
 	$data = $w->request($url);
-	
+
 	$json = array(
 		"packages" => array()
 	);
-	
+
 	preg_match_all('/<br \/>([\w\s]*?) version ([\d\.]*)[\s\S]*?<li>[\s\S]*?<\/li><li>http:\/\/ajax.aspnetcdn.com\/ajax\/([\w]*)\/([\s\S]*?)<\/li>/i', $data, $matches);
 	for($i = 0, $l = sizeof($matches[0]); $i < $l; $i++) {
 		$json["packages"][] = array(
