@@ -1,6 +1,6 @@
 <?php
 //$query = "jq";
-//$query = "cloudflare jquery";
+//$query = "cloudflare angular";
 //$query = "google jq";
 //$query = "msn jq";
 // ****************
@@ -11,8 +11,10 @@ function console($str) {
 		var_dump($str);
 	}
 }
-console("DEBUG MODE");
+//console("DEBUG MODE");
 
+ini_set('memory_limit', '-1');
+error_reporting(0);
 
 require_once('workflows.php');
 
@@ -28,7 +30,7 @@ $output = array();
 if (strpos($query, " ") !== false) {
 	$parts = explode(" ", $query);
 	$cdn_q = array_shift($parts);
-		$string = implode($parts);
+	$string = implode($parts);
 	
 	foreach($cdns as $cdn => $params) {
 		$count = count( $w->results() );
@@ -59,13 +61,15 @@ if ( count( $w->results() ) == 0 ) {
 function load($params) {
 	global $w;
 	// get db
+	//console("READ {$params->id}CDN.json");
 	$pkgs = $w->read("{$params->id}CDN.json");
 	$timestamp = $w->filetime("{$params->id}CDN.json");
-	if ( (!$pkgs || $timestamp < (time() - 7 * 86400)) || 1 ) {
+	if ( (!$pkgs || $timestamp < (time() - 7 * 86400)) ) {
 		$id = $params->id;
 		$data = $id( ($params->db_url) ? $params->db_url : $params->site);
 		$w->write($data, "{$params->id}CDN.json");
 		$pkgs = json_decode( $data );
+		//console("WRITE {$params->id}CDN.json");
 	}/* else if (!$pkgs) {
 		// add in db gen scripts
 		
@@ -81,6 +85,8 @@ function load($params) {
 }
 
 function search($plugin, $query) {
+	//console("SEARCH");
+	//console($plugin);
 	if (isset($plugin->name)) {
 		$name = strtolower(trim($plugin->name));
 		if (strpos($name, $query) === 0) {
@@ -111,6 +117,7 @@ function run($params, $query) {
 		$pkg = $pkgs[$i];
 		$priority = search($pkg, $query);
 		if ($priority) {
+			//console("FOUND {$priority}");
 			$title = $pkg->name." (".$pkg->version.")"; // remove grunt- from title
 		
 			$url = $params->url;
@@ -130,7 +137,7 @@ function run($params, $query) {
 	}
 	
 	// print out order
-	$count = 15;
+	$count = 15; // 15
 	foreach($output as $list) {
 		foreach($list as $item) {
 			$w->result( $item["id"], $item["value"], $item["title"], $item["details"], $item["icon"], "yes" );
