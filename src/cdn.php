@@ -1,6 +1,7 @@
 <?php
 //$query = "jq";
 //$query = "cloudflare angular";
+//$query = "jsdelivr angular";
 //$query = "google jq";
 //$query = "msn jq";
 // ****************
@@ -12,6 +13,7 @@ function console($str) {
 	}
 }
 //console("DEBUG MODE");
+$debug = false;
 
 ini_set('memory_limit', '-1');
 error_reporting(0);
@@ -63,10 +65,12 @@ function load($params) {
 	//console("READ {$params->id}CDN.json");
 	$pkgs = $w->read("{$params->id}CDN.json");
 	$timestamp = $w->filetime("{$params->id}CDN.json");
-	if ( (!$pkgs || $timestamp < (time() - 7 * 86400)) ) {
+	if ( debug || !$pkgs || $timestamp < (time() - 7 * 86400) ) {
+		//console("SEARCH {$params->id}CDN.json");
 		$id = $params->id;
 		$data = $id( ($params->db_url) ? $params->db_url : $params->site);
 		$w->write($data, "{$params->id}CDN.json");
+		//console($data);
 		$pkgs = json_decode( $data );
 		//console("WRITE {$params->id}CDN.json");
 	}/* else if (!$pkgs) {
@@ -78,7 +82,7 @@ function load($params) {
 		$data = '{"packages":[]}';
 		$pkgs = json_decode( $data );
 	}*/
-
+	//console($pkgs);
 	$pkgs = $pkgs->packages;
 	return $pkgs;
 }
@@ -160,23 +164,31 @@ function google($url) {
 	global $w;
 	$data = $w->request($url);
 
-	preg_match_all('/<div id="(.*?)">\s*<dl>[\s\S]*?<dt>(.*?)<\/dt>([\s\S]*?)<\/div>/i', $data, $matches);
-
+	if ($debug && $data == '') {
+		console('URL has likely changed.');
+		console($data);
+	}
+	preg_match_all('/<h3>(.*?)<\/h3>\s*<dl>[\s\S]*?src="(.*?)"[\s\S]*?>(.*?)<\/a>/i', $data, $matches);
+	//console($data);
+	//console($matches);
+	
 	$json = array(
 		"packages" => array()
 	);
-
 	for($i = 0, $l = sizeof($matches[0]); $i < $l; $i++) {
-		preg_match('/ajax\.googleapis\.com\/ajax\/libs\/([\w]*)\/([\d\.]*)\/([\s\S]*?)"/i', $matches[3][$i], $url_matches);
+		// https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js
+		//console($matches[2][$i]);
+		preg_match('/ajax\.googleapis\.com\/ajax\/libs\/([\w]*)\/([\d\.]*)\/([\s\S]*)/i', $matches[2][$i], $url_matches);
+		//console($url_matches);
 
 		//preg_match_all('/([\d\.]{3,9})/i', $matches[3][$i], $versions);
 		//for($j = 0, $k = sizeof($versions[0]); $j < $k; $j++) {
 			$json["packages"][] = array(
-				"name" => $url_matches[1],
-				"description" => $matches[2][$i],
+				"name" => $url_matches[1],			// angularjs
+				"description" => $matches[2][$i],	// angularjs.org
 				//"version" => $versions[1][$j],
-				"version" => $url_matches[2],
-				"filename" => $url_matches[3],
+				"version" => $url_matches[2],		// 1.4.9
+				"filename" => $url_matches[3],		// 
 				"keywords" => array()
 			);
 		//}
@@ -193,7 +205,7 @@ function msn($url) {
 		"packages" => array()
 	);
 
-	preg_match_all('/<br \/>([\w\s]*?) version ([\d\.]*)[\s\S]*?<li>[\s\S]*?<\/li><li>http:\/\/ajax.aspnetcdn.com\/ajax\/([\w]*)\/([\s\S]*?)<\/li>/i', $data, $matches);
+	preg_match_all('/<h4>([\w\s]*?) version ([\d\.]*)<\/h4>[\s\S]*?<li>http:\/\/ajax.aspnetcdn.com\/ajax\/([\s\S]*?)\/([\w\.]*)<\/li>/i', $data, $matches);
 	for($i = 0, $l = sizeof($matches[0]); $i < $l; $i++) {
 		$json["packages"][] = array(
 			"name" => trim($matches[1][$i]),
