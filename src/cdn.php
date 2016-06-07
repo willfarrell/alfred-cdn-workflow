@@ -1,6 +1,6 @@
 <?php
 //$query = "jq";
-//$query = "cloudflare angular";
+$query = "cloudflare angular";
 //$query = "jsdelivr angular";
 //$query = "google jq";
 //$query = "msn jq";
